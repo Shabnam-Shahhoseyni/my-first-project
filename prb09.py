@@ -36,109 +36,60 @@ yA0 = 1.0           # (Pure A feed)
 T0  = 450           # K
 
 # part a-----------------------------------------------------------------------
-
-def reac (v):
-     T  = v[0]
-     X  = v[1]
-     P  = v[2]
-     F = np.empty (6)
-     k  = k450 * np.exp ((EA/R) * ((1/T0) - (1/T)))
-     KC = KC450 * np.exp ((dHR/R) * ((1/T0) - (1/T)))
-     y  = P/P0
-     CA = CA0 * ((1-X)/(1-(0.5*X))) * y * (T0/T)
-     CC = ((0.5 * CA0 * X)/ (1 - (0.5 * X))) * y * (T0/T)
-     rA = (-k) * (CA**2 - CC/KC)
-     return 
-g = fsolve (reac, [450, 0, P0]) 
-print (g)
-# def reaction ( w,d):    # v: variables , d: differential equations 
-#     # T  = v[0]
-#     # X  = v[1]
-#     # P  = v[2]
-
+def reaction ( v, d):    # v: variables , d: differential equations 
+    T  = v[0]
+    X  = v[1]
+    P  = v[2]
     
-#     k  = k450 * np.exp ((EA/R) * ((1/T0) - (1/T)))
-#     KC = KC450 * np.exp ((dHR/R) * ((1/T0) - (1/T)))
-#     y  = P/P0
-#     CA = CA0 * ((1-X)/(1-(0.5*X))) * y * (T0/T)
-#     CC = ((0.5 * CA0 * X)/ (1 - (0.5 * X))) * y * (T0/T)
-#     rA = (-k) * (CA**2 - CC/KC)
+    k  = k450 * np.exp ((EA/R) * ((1/T0) - (1/T)))
+    KC = KC450 * np.exp ((dHR/R) * ((1/T0) - (1/T)))
+    y  = P/P0
+    CA = CA0 * ((1-X)/(1-(0.5*X))) * y * (T0/T)
+    CC = ((0.5 * CA0 * X)/ (1 - (0.5 * X))) * y * (T0/T)
+    rA = (-k) * (CA**2 - CC/KC)
     
-#     d = [0,0,0]
-#     d[0] = -rA / FA0                                     # dXdW 
-#     d[1] = ((-a * (1 - (0.5 * X))) / (2 * y)) * (T/T0)   # dydW 
-#     d[2] = ((Ua * (Ta - T)) + (rA * dHR)) / (FA0 * CPA)  # dTdW 
-#     return d
+    d = [0,0,0]
+    d[0] = -rA / FA0                                     # dXdW 
+    d[1] = ((-a * (1 - (0.5 * X))) / (2 * y)) * (T/T0)   # dydW 
+    d[2] = ((Ua * (Ta - T)) + (rA * dHR)) / (FA0 * CPA)  # dTdW 
+    return d
 
-# d_first_stimation = [T0, 0,P0,0,0,0]     # initial condition [X0 , y0 , T0] 
-# W = [0, 20]                         # catalyst weight
-# ode_system = solve_ivp (reaction, W , d_first_stimation)
+d_first_stimation = [0, 1, 450]     # initial condition [X0 , y0 , T0] 
+W = [0, 20]                         # catalyst weight
+ode_system = solve_ivp (reaction, W , d_first_stimation)
 
-# # plot results
-# plt.plot(ode_system["t"], ode_system["y"][0],'b')
-# plt.title('Concentration per Distance graph')
-# plt.xlabel('Distance (m)')
-# plt.ylabel('Concentration (kg mol/m3)')
-# plt.show()
+# plot results
+plt.plot(ode_system["t"], ode_system["y"][0],'b')
+plt.title('Concentration per Distance graph')
+plt.xlabel('Distance (m)')
+plt.ylabel('Concentration (kg mol/m3)')
+plt.show()
 
 
-# part c-----------------------------------------------------------------------
-# Concentrations = []
-# def concentration (z):
-#     T  = z[0]
-#     X  = z[1]
-#     P  = z[2]
+#part c-----------------------------------------------------------------------
+Concentrations = []
+def concentration (z):
+    T  = z[0]
+    X  = z[1]
+    P  = z[2]
     
-#     C = [[],[]]
-#     C[0] = CA0 * ((1-X)/(1-(0.5*X))) * (P/P0) * (T0/T)
-#     C[1] = ((0.5 * CA0 * X)/ (1 - (0.5 * X))) * (P/P0) * (T0/T)
-#     return C
+    C = [[],[]]
+    C[0] = CA0 * ((1-X)/(1-(0.5*X))) * (P/P0) * (T0/T)
+    C[1] = ((0.5 * CA0 * X)/ (1 - (0.5 * X))) * (P/P0) * (T0/T)
+    return C
     
-# initial_stimations = [T0, 0, P0]
-# w = np.linspace (0, 20)
-# for i in w:
-#     Conc = fsolve(concentration, initial_stimations )
-#     Concentrations.append [Conc]
+initial_stimations = [T0, 0, P0]
+w = np.linspace (0, 20)
+for i in w:
+    Conc = fsolve(concentration, initial_stimations )
+    Concentrations.append [Conc]
 
-# # plot results
-# plt.plot(Concentrations[0], W,'b', Concentrations[1], W, 'r')
-# plt.legend('CA', 'CC')
-# plt.title('Concentration profile per Catalyst weight')
-# plt.xlabel('Catalyst Weight kg')
-# plt.ylabel('Concentration (kg mol/m3)')
-# plt.show()
-
-
-
-# def reaction ( w,d):    # v: variables , d: differential equations 
-#     # T  = v[0]
-#     # X  = v[1]
-#     # P  = v[2]
-
-    
-#     k  = k450 * np.exp ((EA/R) * ((1/T0) - (1/T)))
-#     KC = KC450 * np.exp ((dHR/R) * ((1/T0) - (1/T)))
-#     y  = P/P0
-#     CA = CA0 * ((1-X)/(1-(0.5*X))) * y * (T0/T)
-#     CC = ((0.5 * CA0 * X)/ (1 - (0.5 * X))) * y * (T0/T)
-#     rA = (-k) * (CA**2 - CC/KC)
-    
-#     d = [0,0,0]
-#     d[0] = -rA / FA0                                     # dXdW 
-#     d[1] = ((-a * (1 - (0.5 * X))) / (2 * y)) * (T/T0)   # dydW 
-#     d[2] = ((Ua * (Ta - T)) + (rA * dHR)) / (FA0 * CPA)  # dTdW 
-#     return d
-
-# d_first_stimation = [T0, 0,P0,0,0,0]     # initial condition [X0 , y0 , T0] 
-# W = [0, 20]                         # catalyst weight
-# ode_system = solve_ivp (reaction, W , d_first_stimation)
-
-# # # plot results
-# # plt.plot(ode_system["t"], ode_system["y"][0],'b')
-# # plt.title('Concentration per Distance graph')
-# # plt.xlabel('Distance (m)')
-# # plt.ylabel('Concentration (kg mol/m3)')
-# # plt.show()
-
+# plot results
+plt.plot(Concentrations[0], W,'b', Concentrations[1], W, 'r')
+plt.legend('CA', 'CC')
+plt.title('Concentration profile per Catalyst weight')
+plt.xlabel('Catalyst Weight kg')
+plt.ylabel('Concentration (kg mol/m3)')
+plt.show()
 
 

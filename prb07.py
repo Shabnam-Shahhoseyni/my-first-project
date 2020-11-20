@@ -41,7 +41,6 @@ import numpy as np
 from scipy.optimize import fsolve
 from   scipy.integrate import solve_ivp 
 import matplotlib.pyplot as plt 
-from scipy.integrate import odeint
 
 # Problem data and parameters
 CA0 = 0.2              # kg mol/m3
@@ -56,21 +55,7 @@ L   = 10**-3           # m
 # dCA/dz = w
 # d2CA/dz2 = dw/dz
 
-# def consentration ( z,C):
-#     CA = C[0]
-#     dCA = C[1]
-    
-#     Cdot = [[],[]]
-#     Cdot[0] = dCA
-#     Cdot[1] = (k/DAB) * CA
-#     return Cdot
-    
-# # solve ODE
-# C_first_stimation = [CA0,0]                                     # initial condition
-# z = [0,L]                     # time interval
-# C_list = solve_ivp (consentration, z , C_first_stimation)
-
-def consentration ( C,z):
+def consentration ( z,C):
     CA = C[0]
     dCA = C[1]
     
@@ -80,10 +65,9 @@ def consentration ( C,z):
     return Cdot
     
 # solve ODE
-z = np.linspace(0, L, 200)
-
 C_first_stimation = [CA0,0]                                     # initial condition
-C_list = odeint (consentration,  C_first_stimation,z)
+z = [0,L]                     # time interval
+C_list = solve_ivp (consentration, z , C_first_stimation)
 
 
 # part b ----------------------------------------------------------------------
@@ -96,15 +80,10 @@ for i in Z:
     CA_analitical.append (CA_a)
 
 # plot results
-plt.plot(z, C_list[:,0],'b',  Z , CA_analitical,'r')
+plt.plot(C_list["t"], C_list["y"][0],'b',  Z , CA_analitical,'r')
 plt.title('Concentration per Distance graph')
 plt.xlabel('Distance (m)')
 plt.ylabel('Concentration (kg mol/m3)')
 plt.show()
-
-
-
-
-
 
 

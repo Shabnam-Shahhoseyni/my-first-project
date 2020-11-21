@@ -38,7 +38,6 @@ This is a temporary script file.
 # Note:
     
 import numpy as np
-from scipy.optimize import fsolve
 from   scipy.integrate import solve_ivp 
 import matplotlib.pyplot as plt 
 
@@ -55,23 +54,22 @@ L   = 10**-3           # m
 # dCA/dz = w
 # d2CA/dz2 = dw/dz
 
-def consentration ( z,C):
+def consentration (z, C):
     CA = C[0]
     dCA = C[1]
     
-    Cdot = [[],[]]
-    Cdot[0] = dCA
-    Cdot[1] = (k/DAB) * CA
-    return Cdot
+    Conc = [[],[]]
+    Conc[0] = dCA
+    Conc[1] = (k/DAB) * CA
+    return Conc
     
 # solve ODE
-C_first_stimation = [CA0,0]                                     # initial condition
-z = [0,L]                     # time interval
+C_first_stimation = [CA0,0]                  # initial condition
+z = [0,L]                                    # time interval
 C_list = solve_ivp (consentration, z , C_first_stimation)
 
 
 # part b ----------------------------------------------------------------------
-
 
 CA_analitical=[]
 Z = np.linspace (0 , L)     

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """
+A continuous process system consisting of a well-stirred tank, heater and PI 
+temperature controller is running.
+Plot temperatures T, T0, and Tm to steady state for different proportional gain
 
 @author: shahh
 """
@@ -46,7 +49,7 @@ def Heated_Tank (t, T):    # time , T= Tempretures
     Temps[3] = (Tr - Tm)                       # d(errsum)dt
     return Temps
 
-# part a-----------------------------------------------------------------------
+# part a to d------------------------------------------------------------------
 
 t_span = [0, 200]
 T_initial = [Tr,Tr,Tr,0]
@@ -63,7 +66,7 @@ plt.title('Temperature vs Time graph')
 plt.xlabel('Time, min')
 plt.ylabel('Temperature, °C')
 plt.legend(['Tank','Outlet', 'Measured'])
-# part b-----------------------------------------------------------------------
+
 
 
 

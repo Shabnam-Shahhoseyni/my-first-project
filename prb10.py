@@ -41,7 +41,10 @@ def Heated_Tank (t, T):    # time , T= Tempretures
     
     qs = WCp * (Tr-Tis)
     q  = qs + Kc*(Tr-Tm) + ((Kc/tI)*(errsum))
-    
+   
+    # if q > 2.6*qs:       # This is for part e
+    #     q = 2.6*qs
+        
     Temps = [[],[],[],[]]
     Temps[0] = (WCp * (Ti-Tt) + q) / (rVCp)    # dTdt
     Temps[1] = (Tt-T0-(td/2)*Temps[0])*(2/td)  # dT0dt

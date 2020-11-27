@@ -48,37 +48,40 @@ B = [1211.033, 1344.8]
 C = [220.79, 219.482]
 
 Pt = 1.2 * 760  # atm
-x = [0.6, 0.4]
+# x = [0.6, 0.4]
 x2_0 = 0.4
 x2_end = 0.8
 L0 = [100]
 
-def vap_pressure (T):
+def vap_pressure (T,x2):
+    
     P = [[],[]]
     k = [[],[]]
-
+    x1=1-x2
     for i in range (0,2):
         P[i] = 10** (A[i] - B[i]/(T + C[i]))
-        k[i] = P[i] / Pt 
+        k[i] = P[i]/Pt 
         
-    f = (k[0]*x[0] + k[1]*x[1]) - 1
+    f = (k[0]*x1+k[1]*x2) - 1
     return f
 
-T_initial_stimation = [(80.1+111)/2]   # benzene & toluene average boiling point
-
-T=fsolve(vap_pressure,T_initial_stimation)
-    
 def remained_liquid (x, L):
-    P = 10** (A[1] - B[1]/(T + C[1]))
+    T_initial_stimation = [(80.1+111)/2]   # benzene & toluene average boiling point
+    T=fsolve(vap_pressure, T_initial_stimation,x)
+    P = 10**(A[1]-B[1]/(T+C[1]))
     k = P / Pt 
-    
     dLdx = L / (x * (k - 1))
     return dLdx
 
 x = [x2_0, x2_end]
-L_list = solve_ivp (remained_liquid, x ,L0)
+L_list = solve_ivp (remained_liquid, x ,L0, dense_output=True)
 
-plt.plot(L_list["t"], L_list["y"][0])
+X = np.linspace (0.4, 0.8, 50)
+Liquid=L_list.sol(X)
+
+print("Liquid remaining at x2=0.8   : ",Liquid[0,-1])
+
+plt.plot(X, Liquid[0,:])
 plt.title('Toluene Distilation graph')
 plt.xlabel('X2')
 plt.ylabel('Liquid remaining')
